@@ -1,0 +1,65 @@
+<div id="view-upload">
+    <h1>{{'UPLOAD_TITLE'|translate}}</h1>
+    <div class="panel panel-default">
+        <div class="browser-upload panel-body">
+            <div fileinput onselect="vm.onselectfiles(files)"></div>
+        </div>
+        <div class="alternative-upload panel-body">
+            <span class="title">
+                {{'UPLOAD_ALTERNATIVES_TITLE'|translate}}
+            </span>
+            <div class="method">
+                 <div class="col-md-8 col-sm-8">
+                    <i class="fa fa-upload indicator"></i>
+                </div>
+                <div class="col-md-12 col-sm-12">
+                    <h2>{{'UPLAOD_FTP_TITLE'|translate}} <i class="fa fa-question-circle"></i></h2>
+                    <table>
+                        <tr>
+                            <th>{{'UPLOAD_FTP_USER'|translate}}:</th>
+                            <td>ftp_tvc</td>
+                        </tr>
+                        <tr>
+                            <th>{{'UPLOAD_FTP_PASSWORD'|translate}}:</th>
+                            <td>pw_tvc</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div>
+            <h1>FILES</h1>
+            <ul>
+                <li ng-repeat="item in vm.vus.uploadqueue">
+                    <span ng-bind="item.file.name"></span>
+                    <span ng-bind="item.progress+ ' %'"></span>
+                </li>
+            </ul>
+            <h1>FINISHED</h1>
+            <ul>
+                <li ng-repeat="item in vm.vus.uploaded">
+                    <span ng-bind="item.file.name"></span>
+                    <span ng-bind="item.progress + ' %'"></span>
+                    <span ng-if="item.error" ng-bind="item.errorMessage"></span>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <h2>{{ 'RECENTLY_UPLOADED_TITLE'|translate }}</h2>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <video-thumb ng-repeat="video in vm.recentlyUploadedVideos" video="video"></video-thumb>
+
+            <div class="tvc-video-thumb col-lg-3 col-md-6 col-sm-8 all-videos-container" ui-sref="app.myvideos">
+                <div class="video-frame">
+                    <div class="placeholder">
+                        <i class="fa fa-video-camera"></i>
+                    </div>
+                    <div class="all-videos">{{ 'ALL_VIDEOS'|translate }} <i class="fa fa-arrow-right"></i></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

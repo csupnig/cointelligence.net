@@ -1,0 +1,80 @@
+#view-upload {
+  i {
+    color: @gray-light;
+  }
+  .browser-upload{
+    .uploadpanel {
+      padding-top: 50px;
+      padding-bottom: 50px;
+      > div {
+        float: none;
+        margin: 0 auto 0 auto;
+        i, span {
+          display: block;
+        }
+        i {
+          font-size: 100px;
+          margin-top:30px;
+        }
+        h2, .uppercase {
+          text-transform: uppercase;
+          color: @brand-primary;
+        }
+        .uppercase {
+          cursor: pointer;
+          text-decoration: underline;
+        }
+      }
+    }
+    .uploadpanel.dragover {
+      background-color: lighten(@brand-primary, 30%);
+    }
+  }
+  .alternative-upload {
+    width: 100%;
+    height:150px;
+    border-top:@panel-border;
+    position: relative;
+    .title {
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 50px;
+      background: @panel-bg;
+      text-align: center;
+    }
+    .method {
+      width:275px;
+      margin: 20px auto 10px auto;
+      >div {
+        margin:0;
+        padding: 0;
+      }
+      h2 {
+        font-size: 14px;
+        margin-top: 0;
+
+      }
+      th {
+        font-size: 12px;
+      }
+      td {
+        color: @brand-primary;
+      }
+      i.indicator {
+        font-size: 35px;
+        display: block;
+        text-align: center;
+      }
+    }
+  }
+  .all-videos-container {
+    cursor: pointer;
+    
+    .all-videos {
+      margin: auto;
+      text-align: center;
+    }
+  }
+}

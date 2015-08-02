@@ -1,0 +1,36 @@
+<div class="tvc-video-thumb col-lg-3 col-md-6 col-sm-8"
+        ng-class="{ 'selected': vm.selected }">
+
+    <div class="video-frame">
+
+        <div class="preview" ng-hide="vm.videoIsIncomplete()">
+            <img ng-src="{{:: vm.video.fields.previewImage }}">
+        </div>
+
+        <div class="checkbox-container" ng-click="vm.selected = !vm.selected">
+            <div class="empty-box" ng-show="!vm.selected"></div>
+            <div class="checked-box" ng-show="vm.selected">
+                <i class="fa fa-check"></i>
+            </div>
+        </div>
+
+        <div class="status-container">
+            <div class="status-icon" ng-hide="vm.video.fields.status == 'ok'">
+                <i class="fa {{ vm.getStatusIcon() }}"></i>
+            </div><div class="status-message" ng-show="vm.videoIsIncomplete()">
+                {{ vm.video.fields.status }}
+            </div><div class="time" ng-hide="vm.videoIsIncomplete()">{{:: vm.timestampToHMS(vm.video.fields.recordTime) }}</div>
+        </div>
+
+        <div class="placeholder" ng-show="vm.videoIsIncomplete()">
+            <i class="fa" ng-class="{ 'fa-spinner fa-pulse': vm.video.fields.status == 'uploading'}"></i>
+        </div>
+
+    </div>
+
+    <div class="caption">
+        <a href="" class="title">{{:: vm.video.fields.title }}</a>
+        <p>{{:: vm.video.fields.description }}</p>
+    </div>
+
+</div>

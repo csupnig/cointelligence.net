@@ -1,0 +1,346 @@
+<div id="view-edit-video">
+    <h1 ng-bind="'EDIT_VIDEO_TITLE' | translate"></h1>
+
+    <div class="panel panel-default">
+        <div class="browser-upload panel-body">
+
+            <form name="editVideoForm">
+                <div class="row">
+
+                    <div class="col-sm-20">
+
+
+                        <div class="video-player-container">
+
+                        </div>
+
+                        <h3 translate>EDIT_TAGGING_TITLE</h3>
+                        <div class="tagging-form row">
+
+
+                            <script type="text/ng-template" id="error-messages">
+                                <div ng-message="required">This field is required</div>
+                                <div ng-message="minlength">This field is too short!!</div>
+                            </script>
+
+                            <div class="col-sm-8">
+                                <h4 ng-bind="'EDIT_DESCRIPTION_TITLE' | translate"></h4>
+
+                                <div class="form-group">
+                                    <label>
+                                        <span translate>EDIT_FORM_LABEL_TITLE</span>
+                                        <input type="text" class="form-control" name="title" ng-model="vm.video.fields.title" required>
+                                    </label>
+                                    <div class="form-error-alert" ng-if='editVideoForm.title.$dirty'>
+                                        <div ng-messages="editVideoForm.title.$error" role="alert" ng-messages-include="error-messages"></div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <span translate>EDIT_FORM_LABEL_PRODUCER</span>
+                                        <input type="text" class="form-control" name="producer" ng-model="vm.video.fields.producer" required>
+                                    </label>
+                                    <div class="form-error-alert" ng-if='editVideoForm.producer.$dirty'>
+                                        <div ng-messages="editVideoForm.producer.$error" role="alert" ng-messages-include="error-messages"></div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <span translate>EDIT_FORM_LABEL_CUSTOMER</span>
+                                        <input type="text" class="form-control" name="customer" ng-model="vm.video.fields.customer" required>
+                                    </label>
+                                    <div class="form-error-alert" ng-if='editVideoForm.customer.$dirty'>
+                                        <div ng-messages="editVideoForm.customer.$error" role="alert" ng-messages-include="error-messages"></div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <span translate>EDIT_FORM_LABEL_RECORD_TIME</span>
+                                        <input type="date" class="form-control" name="recordTime" ng-model="vm.video.fields.recordTime" required>
+                                    </label>
+                                    <div class="form-error-alert" ng-if='editVideoForm.recordTime.$dirty'>
+                                        <div ng-messages="editVideoForm.recordTime.$error" role="alert" ng-messages-include="error-messages"></div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <span translate>EDIT_FORM_LABEL_RECORD_LANGUAGE</span>
+                                        <input type="text" class="form-control" name="recordLanguage" ng-model="vm.video.fields.recordLanguage" required>
+                                    </label>
+                                    <div class="form-error-alert" ng-if='editVideoForm.recordLanguage.$dirty'>
+                                        <div ng-messages="editVideoForm.recordLanguage.$error" role="alert" ng-messages-include="error-messages"></div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <span translate>EDIT_FORM_LABEL_DESCRIPTION</span>
+                                        <textarea class="form-control" name="description" ng-model="vm.video.fields.description"></textarea>
+                                    </label>
+                                    <div class="form-error-alert" ng-if='editVideoForm.description.$dirty'>
+                                        <div ng-messages="editVideoForm.description.$error" role="alert" ng-messages-include="error-messages"></div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="col-sm-8">
+                                <h4 ng-bind="'EDIT_CATEGORIZATION_TITLE' | translate"></h4>
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <h6 ng-bind="'EDIT_CATEGORY_TITLE' | translate"></h6>
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" name="category" ng-model="vm.video.fields.category" value="beitrag">
+                                                Beitrag
+                                            </label>
+                                        </div>
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" name="category" ng-model="vm.video.fields.category" value="Cleanfeed">
+                                                Cleanfeed
+                                            </label>
+                                        </div>
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" name="category" ng-model="vm.video.fields.category" value="Footage">
+                                                Footage
+                                            </label>
+                                        </div>
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" name="category" ng-model="vm.video.fields.category" value="Spot">
+                                                Spot
+                                            </label>
+                                        </div>
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" name="category" ng-model="vm.video.fields.category" value="O-Ton">
+                                                O-Ton
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12">
+                                        <h6 ng-bind="'EDIT_SEASON_TITLE' | translate"></h6>
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" name="category" value="beitrag" translate>
+                                                <span translate>EDIT_SEASON_SPRING</span>
+                                            </label>
+                                        </div>
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" name="category" value="Cleanfeed">
+                                                <span translate>EDIT_SEASON_SUMMER</span>
+                                            </label>
+                                        </div>
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" name="category" value="Footage">
+                                                <span translate>EDIT_SEASON_AUTUMN</span>
+                                            </label>
+                                        </div>
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" name="category" value="Spot">
+                                                <span translate>EDIT_SEASON_WINTER</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>
+                                        <span translate>EDIT_FORM_LABEL_RECORD_LOCATIONS</span>
+                                        <input type="text" class="form-control" name="recordLocations" ng-model="vm.video.fields.recordLocations">
+                                    </label>
+                                    <div class="form-error-alert" ng-if='editVideoForm.recordLocations.$dirty'>
+                                        <div ng-messages="editVideoForm.recordLocations.$error" role="alert" ng-messages-include="error-messages"></div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <span translate>EDIT_FORM_LABEL_TAGS</span>
+                                        <textarea class="form-control" name="tags" ng-model="vm.video.fields.tags"></textarea>
+                                    </label>
+                                    <div class="form-error-alert" ng-if='editVideoForm.tags.$dirty'>
+                                        <div ng-messages="editVideoForm.tags.$error" role="alert" ng-messages-include="error-messages"></div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <span translate>EDIT_FORM_LABEL_RESSORT</span>
+                                        <select class="form-control" ng-model="vm.video.fields.ressort" name="ressort">
+                                            <option translate>EDIT_FORM_LABEL_TOURISM_INDUSTRY</option>
+                                            <option translate>EDIT_FORM_LABEL_TRAVEL_HOLIDAY</option>
+                                            <option translate>EDIT_FORM_LABEL_CUISINE</option>
+                                            <option translate>EDIT_FORM_LABEL_SPORT_LEISURE</option>
+                                            <option translate>EDIT_FORM_LABEL_LIFESTYLE</option>
+                                        </select>
+                                    </label>
+                                    <div class="form-error-alert" ng-if='editVideoForm.ressort.$dirty'>
+                                        <div ng-messages="editVideoForm.ressort.$error" role="alert" ng-messages-include="error-messages"></div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="col-sm-8">
+                                <h4 ng-bind="'EDIT_RIGHTS_TITLE' | translate"></h4>
+
+                                <div class="form-group">
+                                    <label>
+                                        <span translate>EDIT_FORM_LABEL_COPYRIGHT</span>
+                                        <input type="text" class="form-control" name="copyright" ng-model="vm.video.fields.copyright">
+                                    </label>
+                                    <div class="form-error-alert" ng-if='editVideoForm.copyright.$dirty'>
+                                        <div ng-messages="editVideoForm.copyright.$error" role="alert" ng-messages-include="error-messages"></div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <span translate>EDIT_FORM_LABEL_USAGE_RIGHTS</span>
+                                        <input type="text" class="form-control" name="usageRights" ng-model="vm.video.fields.usageRights">
+                                    </label>
+                                    <div class="form-error-alert" ng-if='editVideoForm.usageRights.$dirty'>
+                                        <div ng-messages="editVideoForm.usageRights.$error" role="alert" ng-messages-include="error-messages"></div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <span translate>EDIT_FORM_LABEL_USAGE_DURATION</span>
+                                        <input type="text" class="form-control" name="usageDuration" ng-model="vm.video.fields.usageDuration">
+                                    </label>
+                                    <div class="form-error-alert" ng-if='editVideoForm.usageDuration.$dirty'>
+                                        <div ng-messages="editVideoForm.usageDuration.$error" role="alert" ng-messages-include="error-messages"></div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <span translate>EDIT_FORM_LABEL_USAGE_REMARKS</span>
+                                        <textarea class="form-control" name="usageRemarks" ng-model="vm.video.fields.usageRemarks"></textarea>
+                                    </label>
+                                    <div class="form-error-alert" ng-if='editVideoForm.usageRemarks.$dirty'>
+                                        <div ng-messages="editVideoForm.usageRemarks.$error" role="alert" ng-messages-include="error-messages"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <h3 translate>EDIT_RELEASE_MANAGEMENT_TITLE</h3>
+                        <div class="release-management-form row">
+                            <div class="col-sm-16">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="form-group">
+                                            <label>
+                                                <span translate>EDIT_FORM_LABEL_STATUS</span>
+                                                <select class="form-control" name="status" ng-model="vm.status">
+                                                    <option value="downloadable" translate>EDIT_STATUS_VISIBLE_DOWNLOADABLE</option>
+                                                    <option value="notDownloadable"  translate>EDIT_STATUS_VISIBLE_NOT_DOWNLOADABLE</option>
+                                                    <option value="restricted"  translate>EDIT_STATUS_DOWNLOAD_RESTRICTED</option>
+                                                    <option value="invisible"  translate>EDIT_STATUS_INVISIBLE</option>
+                                                </select>
+                                            </label>
+                                            <div class="form-error-alert" ng-if='editVideoForm.status.$dirty'>
+                                                <div ng-messages="editVideoForm.status.$error" role="alert" ng-messages-include="error-messages"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <div class="form-group" ng-show="vm.status == 'restricted'">
+                                            <label>
+                                                <span translate>EDIT_FORM_LABEL_RESTRICTED_TO</span>
+                                                <input type="text" class="form-control" name="restrictedTo">
+                                            </label>
+                                            <div class="form-error-alert" ng-if='editVideoForm.restrictedTo.$dirty'>
+                                                <div ng-messages="editVideoForm.restrictedTo.$error" role="alert" ng-messages-include="error-messages"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p><small>
+                                    Curabitur laoreet vehicula libero eu eleifend. Maecenas eu lobortis justo. Nullam sed
+                                    purus vitae sem lobortis porta. Phasellus ac auctor mauris. Phasellus maximus dignissim lorem.
+                                    Nullam egestas purus ac arcu accumsan vulputate. Sed ut elit et risus efficitur iaculis ut at enim.
+                                </small>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-16">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="form-group">
+                                            <label>
+                                                <span translate>EDIT_FORM_LABEL_PUBLISH_DATE</span>
+                                                <input type="date" class="form-control" name="publishDate" ng-model="vm.video.fields.publishDate">
+                                            </label>
+                                            <div class="form-error-alert" ng-if='editVideoForm.publishDate.$dirty'>
+                                                <div ng-messages="editVideoForm.publishDate.$error" role="alert" ng-messages-include="error-messages"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <div class="form-group">
+                                            <label>
+                                                <span translate>EDIT_FORM_LABEL_DEPUBLISH_DATE</span>
+                                                <input type="date" class="form-control" name="depublishDate" ng-model="vm.video.fields.depublishDate">
+                                            </label>
+                                            <div class="form-error-alert" ng-if='editVideoForm.depublishDate.$dirty'>
+                                                <div ng-messages="editVideoForm.depublishDate.$error" role="alert" ng-messages-include="error-messages"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="col-sm-4">
+                        <button class="btn btn-primary" type="submit">
+                            <span translate>EDIT_FORM_LABEL_SAVE</span>
+                        </button><br><br>
+                        <button class="btn btn-default" type="submit">
+                            <span translate>EDIT_FORM_LABEL_DELETE</span>
+                        </button>
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-20">
+                        <h4 translate>EDIT_ORDER_DISTRIBUTION_TITLE</h4>
+                        <div class="row">
+                            <div class="col-sm-16">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <small translate>
+                                            EDIT_ORDER_DISTRIBUTION_INFO
+                                        </small>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <div class="checkbox">
+                                            <label>
+                                                <span translate>EDIT_FORM_LABEL_ORDER_DISTRIBUTION</span>
+                                                <input type="checkbox" name="category" value="beitrag" translate>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <button class="btn btn-primary" type="submit">
+                            <span translate>EDIT_FORM_LABEL_SAVE</span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>

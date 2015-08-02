@@ -1,0 +1,121 @@
+.tvc-video-thumb {
+
+  height: 250px;
+  transition: background-color 0.1s;
+
+  &.selected {
+    &, &:hover {
+      background-color: @brand-primary;
+    }
+    .caption {
+      color: white;
+      a.title:link, a.title:visited {
+        color: white;
+      }
+    }
+  }
+
+  &:hover {
+    background-color: darken(@gray-lighter, 8%);
+
+    .video-frame {
+      background-color: #b4b3ab;
+      .placeholder, .preview {
+        opacity: 1;
+      }
+      .checkbox-container .empty-box {
+        border-color: rgba(200, 200, 200, 0.8);
+      }
+    }
+  }
+
+  .video-frame {
+    background-color: #c6c5bd;
+    transition: background-color 0.3s;
+    width: 100%;
+    height: 50%;
+    margin-top: 8px;
+    position: relative;
+    overflow: hidden;
+
+    .placeholder, .preview {
+      opacity: 0.75;
+      transition: opacity 0.3s;
+    }
+    .placeholder {
+      color: #555;
+      margin: auto;
+      padding-top: 45px;
+      text-align: center;
+      font-size: 32px;
+    }
+
+    .preview {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    .checkbox-container {
+      position: absolute;
+      cursor: pointer;
+      user-select: none;
+      top: 5px;
+      left: 5px;
+
+      .empty-box {
+        width: 24px;
+        height: 24px;
+        border: 2px solid rgba(200, 200, 200, 0.1);
+        box-shadow: 0 0 2px 0 rgba(0,0,0,0.3);
+        transition: border-color 0.3s;
+
+        &.ng-hide-add, &.ng-hide-add-active {
+          transition: border-color 0s;
+        }
+      }
+      .checked-box {
+        font-size: 24px;
+        color: @brand-primary;
+        text-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
+      }
+    }
+
+    .status-container {
+      position: absolute;
+      background-color: rgba(255,255,255,0.7);
+      box-shadow: 0 0 2px 0 rgba(0,0,0,0.5);
+      top: 5px;
+      right: 5px;
+      height: 24px;
+
+      .status-icon {
+        display: inline-block;
+        background-color: @brand-primary;
+        color: white;
+        font-size: 16px;
+        padding: 4px;
+      }
+      .status-message, .time {
+        display: inline-block;
+        font-size: 12px;
+        color: @gray;
+        position: relative;
+        padding: 5px 5px 0 5px;
+        vertical-align: top;
+      }
+    }
+  }
+
+  .caption {
+    position: relative;
+
+    a.title {
+      display: inline-block;
+      font-size: @font-size-h4;
+      &:link, &:visited {
+        color: @brand-primary;
+      }
+    }
+  }
+}

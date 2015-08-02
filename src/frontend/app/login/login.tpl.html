@@ -1,0 +1,19 @@
+<div id="view-login">
+  <div class="header">
+    <h1 class="title" ng-bind="'LOGIN_TITLE' | translate"></h1>
+  </div>
+  <form class="form-signin">
+    <div class="form_group login-form">
+      <input type="text" class="form-control" ng-model="vm.username" id="username" placeholder="{{'LOGIN_PLACEHOLDER_USERNAME' | translate}}">
+    </div>
+    <div class="form_group login-form">
+      <input type="password" class="form-control" ng-model="vm.password" id="password" placeholder="{{'LOGIN_PLACEHOLDER_PASSWORD' | translate}}">
+    </div>
+    <div class="login-form">
+      <a href="#" ng-bind="'LOGIN_FORGOT_PASSWORD' | translate"></a>
+    </div>
+    <button ng-click="vm.login()" class="btn btn-default btn-block login-form btn-lg" type="submit">
+        <span translate>LOGIN_LOGIN</span>
+    </button>
+  </form>
+</div>

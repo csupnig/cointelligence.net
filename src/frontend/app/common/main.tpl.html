@@ -1,0 +1,21 @@
+<header class="navbar navbar-default">
+    <div class="navbar-inner">
+        <div class="container">
+            <nav>
+                <ul class="nav navbar-nav">
+                    <a role="button" class="navbar-brand header-logo header-logo--apaOts header-logo-transitions" href="#/"></a>
+                </ul>
+                <ul class="nav navbar-nav usernav pull-right">
+                    <li><a ui-sref="app.help"><i class="fa fa-question"></i></a></li>
+                    <li><a ui-sref="app.user"><i class="fa fa-user"></i></a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</header>
+
+<div class="container" ui-view="navigation">
+</div>
+
+<div class="container" ui-view="content">
+</div>

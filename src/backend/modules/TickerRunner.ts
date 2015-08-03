@@ -25,7 +25,11 @@ export class TickerRunner {
                     runner.buffer.addTick(ticks[i]);
                 }
             }
-            runner.ticker.startTicker();
+            this.portfolio.init().then(()=>{
+                runner.ticker.startTicker();
+            }).catch((err)=>{
+                console.error('Could not initialize portfolio', err);
+            });
         });
     }
 

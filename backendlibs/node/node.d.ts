@@ -715,7 +715,7 @@ declare module "https" {
     export interface RequestOptions {
         host?: string;
         hostname?: string;
-        port?: number;
+        port?: number|string;
         path?: string;
         method?: string;
         headers?: any;
@@ -728,6 +728,7 @@ declare module "https" {
         ca?: any;
         ciphers?: string;
         rejectUnauthorized?: boolean;
+        secureProtocol?:string;
     }
 
     export interface Agent {

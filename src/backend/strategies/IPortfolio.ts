@@ -11,6 +11,7 @@ export interface IPortfolio {
     fiat : number;
     asset: number;
     fee : number;
+    init() : Q.Promise<boolean>;
     buy(amount : number, price : number) : Q.Promise<boolean>;
     sell(amount : number, price : number) : Q.Promise<boolean>;
     getPossiblePrice(amount : number, method : METHOD) : Q.Promise<number>;

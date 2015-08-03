@@ -10,6 +10,12 @@ export class SimplePortfolio implements iportfolio.IPortfolio {
 
     }
 
+    init() : Q.Promise<boolean> {
+        var deferred = Q.defer<boolean>();
+        deferred.resolve(true);
+        return deferred.promise;
+    }
+
     buy(amount : number, price : number) : Q.Promise<boolean> {
         var deferred = Q.defer<boolean>();
         console.log('portfolio', this, this.fiat, amount, price);

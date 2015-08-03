@@ -4,6 +4,7 @@ import crypto = require('crypto');
 import querystring = require('querystring');
 import util = require('util');
 import Q = require('q');
+import constants = require('constants');
 
 
     var lastNounceTS = 0;
@@ -121,7 +122,7 @@ import Q = require('q');
 
 
         public info(pair:string):Q.Promise<IPublicInfoResponse> {
-            var url = this.urlGet + '/fee/' + (pair ? pair : 'btc_usd');
+            var url = this.urlGet + '/info';
             return this.getHTTPS(url).then((data:any)=> {
                 if (!data.pairs || !data.pairs[pair]) {
                     throw "Could not get info";
@@ -338,17 +339,17 @@ import Q = require('q');
             var content = {
                 'method': method,
                 'nonce': ++this.nonce,
-            }
+            };
 
             if (!!params && typeof(params) == 'object') {
                 Object.keys(params).forEach(function (key) {
                     var value;
                     if (key == 'since' || key == 'end') {
-                        value = btce.getTimestamp(params[key])
+                        value = btce.getTimestamp(params[key]);
                     } else {
-                        value = params[key]
+                        value = params[key];
                     }
-                    content[key] = value
+                    content[key] = value;
                 })
             }
 
@@ -362,9 +363,10 @@ import Q = require('q');
             var url = URL.parse(this.urlPost);
             options.host = url.host;
             options.port = Number(url.port);
-            options.auth = url.auth;
+            //options.auth = url.auth;
             options.path = url.path;
             options.hostname = url.hostname;
+            //options = <https.RequestOptions> url;
             options.method = 'POST';
             options.headers = {
                 'Key': this.key,
@@ -373,15 +375,16 @@ import Q = require('q');
                 'content-length': contentstr.length,
             };
 
+
             var req = https.request(options, function (res) {
                 var data = '';
                 //res.setEncoding('utf8')
                 res.on('data', function (chunk) {
-                    data += chunk
+                    data += chunk;
                 });
                 res.on('end', function () {
                     try {
-                        var result:ITradeApiResponse = JSON.parse(data)
+                        var result:ITradeApiResponse = JSON.parse(data);
                         if (result.error || result.success == 0) {
                             deferred.reject(result.error || 'Unknown error');
                         } else {
@@ -396,8 +399,7 @@ import Q = require('q');
             req.on('error', function (err) {
                 deferred.reject(err);
             });
-
-            req.write(content);
+            req.write(contentstr);
             req.end();
 
             return deferred.promise;

@@ -26,6 +26,9 @@ export class SimplePortfolio implements iportfolio.IPortfolio {
     sell(amount : number, price : number) : Q.Promise<boolean> {
         var deferred = Q.defer<boolean>();
         console.log('portfolio', this, this.fiat, amount, price);
+        if (amount > this.asset) {
+            amount = this.asset;
+        }
         if ( (this.asset - amount) >= 0) {
             this.asset -= amount;
             this.fiat += (amount - amount * this.fee) * price;

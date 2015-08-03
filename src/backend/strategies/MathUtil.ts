@@ -103,44 +103,59 @@ export class MathUtil {
 
 	public static RSI (array : Array<number>, rsiperiod : number) : Array<number> {
 		var arr = array.slice().reverse(),
-			rsi = [], i, j, upVal, downVal, upCount, downCount, val;
+			rsi = [], i, j, upVal, downVal, val,avgGain,avgLoss, first = true, currsi;
 		for (i = 0; i < array.length; i++) {
 			if ((i - rsiperiod) < 0) {
 				rsi.push(NaN);
 			} else {
 				upVal = 0;
 				downVal = 0;
-				upCount = 0;
-				downCount = 0;
-				for (j = i - rsiperiod; j < i; j++) {
-					val = arr[j] - arr[j + 1];
-					if (val < 0) {
-						//ups
-						upVal += Math.abs(val);
-						upCount++;
-					} else if (val > 0) {
-						//downs
-						downVal += val;
-						downCount++;
+				currsi = 0;
+				if (first) {
+					for (j = i - rsiperiod; j < i; j++) {
+						val = arr[j] - arr[j + 1];
+						if (val < 0) {
+							//ups
+							upVal += Math.abs(val);
+						} else if (val > 0) {
+							//downs
+							downVal += val;
+						}
 					}
+					avgGain = upVal / rsiperiod;
+					avgLoss = downVal / rsiperiod;
+					first = false;
+				} else {
+					val = arr[i] - arr[i + 1];
+					if (val < 0) {
+						upVal += Math.abs(val);
+					} else if (val > 0) {
+						downVal += val;
+					}
+					avgGain = (avgGain * (rsiperiod - 1) + upVal) / rsiperiod;
+					avgLoss = (avgLoss * (rsiperiod - 1) + downVal) / rsiperiod;
 				}
-				rsi.push(100 - (100 / (1 + ((upVal / upCount) / (downVal / downCount)))));
+				if (avgLoss == 0) {
+					currsi = 100;
+				} else {
+					currsi = 100 - (100 / (1 + (avgGain / avgLoss)));
+				}
+				rsi.push(currsi);
 			}
 		}
 		rsi.reverse();
 		return rsi;
 	}
 
-	public static STOCHRSI(closearray : Array<number>, rsiperiod : number) : number {
-		var rsi = MathUtil.RSI(closearray,rsiperiod),
-			rsimin = MathUtil.arrayMin(rsi),
-			rsimax = MathUtil.arrayMax(rsi);
+	public static STOCHRSI(rsiarray : Array<number>, rsiperiod : number) : number {
+		var rsimin = MathUtil.arrayMin(rsiarray),
+			rsimax = MathUtil.arrayMax(rsiarray);
 
 		if (rsimax - rsimin == 0) {
 			return 100;
 		}
 
-		return 100 * (rsi[0] - rsimin) / (rsimax - rsimin);
+		return 100 * (rsiarray[0] - rsimin) / (rsimax - rsimin);
 	}
 
 	public static SMA (originalArray : Array<number>, smaLength : number) : Array<number>{

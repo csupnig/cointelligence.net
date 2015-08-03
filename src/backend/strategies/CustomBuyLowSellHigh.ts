@@ -33,7 +33,8 @@ export class CustomBuyLowSellHigh implements istrategy.IStrategy {
         var a = this.mintrade + add;
         var EMA21 = MathUtil.EMA(instruments, 21);
         var EMA10 = MathUtil.EMA(instruments, 10);
-        var STOCHRSI = MathUtil.STOCHRSI(instruments,14);
+        var RSI = MathUtil.RSI(instruments, 14);
+        var STOCHRSI = MathUtil.STOCHRSI(RSI,14);
 
         var minactiondist = this.minactiondistance;
         if (EMA21[0] > EMA10[0]) {
@@ -54,7 +55,7 @@ export class CustomBuyLowSellHigh implements istrategy.IStrategy {
         //    console.log("missing buy " + portfolio.asset + " > " + that.buys.length, that.buys);
         //}
 
-        console.log('price', curPrice,'EMA21', EMA21[0],'STOCHRSI',STOCHRSI, 'FIAT', portfolio.fiat, 'ASSET', portfolio.asset,'TOTAL', portfolio.fiat + (portfolio.asset *(1 - fee) * curPrice), "buys", that.buys.length);
+        console.log('price', curPrice,'EMA21', EMA21[0],'STOCHRSI',STOCHRSI, 'RSI', RSI[0], 'FIAT', portfolio.fiat, 'ASSET', portfolio.asset,'TOTAL', portfolio.fiat + (portfolio.asset *(1 - fee) * curPrice), "buys", that.buys.length);
 
         //check if current price is higher than one of the bought items
         for (var i = 0; i < that.buys.length; i++) {

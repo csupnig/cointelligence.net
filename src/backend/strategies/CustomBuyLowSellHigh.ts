@@ -1,10 +1,7 @@
 import istrategy = require('./IStrategy');
 import buff = require('../modules/TickerBuffer');
 import iportfolio = require('./IPortfolio');
-import math = require('./MathUtil');
-
-var MathUtil = math.MathUtil;
-
+import MathUtil = require('./MathUtil');
 
 export class CustomBuyLowSellHigh implements istrategy.IStrategy {
 

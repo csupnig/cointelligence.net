@@ -20,11 +20,11 @@ var Q = require("q"),
 module.exports = function (pkg, cfg, suitname) {
 
     var builders = [new Clean(pkg,cfg),
-                    new Assets(pkg,cfg),
-                    new Css(pkg,cfg),
-                    new Fonts(pkg,cfg),
-                    new Typescript(pkg,cfg),
-                    new Html(pkg,cfg),
+                    //new Assets(pkg,cfg),
+                    //new Css(pkg,cfg),
+                    //new Fonts(pkg,cfg),
+                    //new Typescript(pkg,cfg),
+                    //new Html(pkg,cfg),
                     new Backend(pkg,cfg)];
 
     /**

@@ -12,6 +12,18 @@ export interface IMACDResult {
 	histogram: Array<number>;
 }
 
+export interface IAverage {
+	mean : number;
+	variance: number;
+	deviation : number;
+}
+
+export interface IBBANDSResult {
+	highband : Array<number>;
+	lowband : Array<number>;
+	middleband : Array<number>;
+}
+
 export class MathUtil {
 
 	public static arrayMax (array : Array<number>) : number {
@@ -26,7 +38,15 @@ export class MathUtil {
 		}));
 	}
 
-	public static diff  (x : number, y : number) {
+	public static upscale(number : number, places : number) : number {
+		return Math.round(number * Math.pow(10,places));
+	}
+
+	public static downscale(number:number, places:number) : number {
+		return number / Math.pow(10,places);
+	}
+
+	public static diff  (x : number, y : number) : number {
 		return ((x - y) / ((x + y) / 2)) * 100;
 	}
 
@@ -38,7 +58,7 @@ export class MathUtil {
 		return arr;
 	}
 
-	public static average(a : Array<number>) {
+	public static average(a : Array<number>) : IAverage {
 		var r = {mean: 0, variance: 0, deviation: 0}, t = a.length, m, l, s;
 		for (m, s = 0, l = t; l--; s += a[l]) {
 		}
@@ -47,10 +67,22 @@ export class MathUtil {
 		return r.deviation = Math.sqrt(r.variance = s / t), r;
 	}
 
-	public static BBANDS (array : Array<number>, period : number) {
-		var SMA = this.SMA(array, period);
-		//TODO finish implementation
-		return SMA;
+	public static BBANDS (array : Array<number>, period : number) : IBBANDSResult{
+		var bbands = {
+				middleband:[],
+				lowband:[],
+				highband:[]
+			},
+			sma = MathUtil.SMA(array, period),
+			avg ,i,arr;
+		for (i = period-1;i>=0;i--) {
+			arr = array.slice(i, i + period);
+			avg = MathUtil.average(arr);
+			bbands.highband[i] = sma[i] + (2 * avg.deviation);
+			bbands.lowband[i] = sma[i] - (2 * avg.deviation);
+			bbands.middleband[i] = sma[i];
+		}
+		return bbands;
 	}
 
 
@@ -102,75 +134,69 @@ export class MathUtil {
 	}
 
 	public static RSI (array : Array<number>, rsiperiod : number) : Array<number> {
-		var arr = array.slice().reverse(),
-			rsi = [], i, j, upVal, downVal, val,avgGain,avgLoss, first = true, currsi;
-		for (i = 0; i < array.length; i++) {
-			if ((i - rsiperiod) < 0) {
-				rsi.push(NaN);
+		var rsi =[],i,j,loss,gain,diff,avggain,avgloss,first=true;
+
+		for (i = rsiperiod -1; i>=0; i--) {
+			loss = gain = 0;
+			if (first) {
+				for (j = i + rsiperiod -1; j >= i; j--) {
+					diff = array[j + 1] - array[j];
+					if (diff > 0) {
+						loss += Math.abs(diff);
+					} else {
+						gain += Math.abs(diff);
+					}
+				}
+				first = false;
+				avggain = gain / rsiperiod;
+				avgloss = loss / rsiperiod;
 			} else {
-				upVal = 0;
-				downVal = 0;
-				currsi = 0;
-				if (first) {
-					for (j = i - rsiperiod; j < i; j++) {
-						val = arr[j] - arr[j + 1];
-						if (val < 0) {
-							//ups
-							upVal += Math.abs(val);
-						} else if (val > 0) {
-							//downs
-							downVal += val;
-						}
-					}
-					avgGain = upVal / rsiperiod;
-					avgLoss = downVal / rsiperiod;
-					first = false;
+				diff = array[i + 1] - array[i];
+				if (diff > 0) {
+					loss += Math.abs(diff);
 				} else {
-					val = arr[i] - arr[i + 1];
-					if (val < 0) {
-						upVal += Math.abs(val);
-					} else if (val > 0) {
-						downVal += val;
-					}
-					avgGain = (avgGain * (rsiperiod - 1) + upVal) / rsiperiod;
-					avgLoss = (avgLoss * (rsiperiod - 1) + downVal) / rsiperiod;
+					gain += Math.abs(diff);
 				}
-				if (avgLoss == 0) {
-					currsi = 100;
-				} else {
-					currsi = 100 - (100 / (1 + (avgGain / avgLoss)));
-				}
-				rsi.push(currsi);
+				avggain = ((avggain * (rsiperiod-1)) + gain) / rsiperiod;
+				avgloss = ((avgloss * (rsiperiod-1)) + loss) / rsiperiod;
+			}
+			//console.log("g", avggain, "l", avgloss);
+
+			if (avgloss == 0) {
+				rsi[i] = 100;
+			} else {
+				rsi[i] = 100 - (100/(1+(avggain/avgloss)));
 			}
 		}
-		rsi.reverse();
+
 		return rsi;
 	}
 
-	public static STOCHRSI(rsiarray : Array<number>, rsiperiod : number) : number {
-		var rsimin = MathUtil.arrayMin(rsiarray),
+	public static STOCHRSI(instruments : Array<number>, rsiperiod : number) : Array<number> {
+		var stochrsi = [],
+			rsiarray ,
+			rsimin ,
+			rsimax ,i,arr;
+		for (i = rsiperiod-1;i>=0;i--) {
+			arr = instruments.slice(i);
+			rsiarray = MathUtil.RSI(arr,rsiperiod);
+			rsimin = MathUtil.arrayMin(rsiarray);
 			rsimax = MathUtil.arrayMax(rsiarray);
-
-		if (rsimax - rsimin == 0) {
-			return 100;
+			if (rsimax - rsimin == 0) {
+				stochrsi[i]= 100;
+			} else {
+				stochrsi[i]= 100 * (rsiarray[0] - rsimin) / (rsimax - rsimin);
+			}
 		}
-
-		return 100 * (rsiarray[0] - rsimin) / (rsimax - rsimin);
+		return stochrsi;
 	}
 
 	public static SMA (originalArray : Array<number>, smaLength : number) : Array<number>{
-		var array = originalArray.slice().reverse(),
-			sma = [], i;
-		for (i = 0; i < smaLength - 1; i++) {
-			sma[i] = NaN;
+		var array , sma = [], i;
+		for (i = smaLength-1; i >= 0 ; i--) {
+			array = originalArray.slice(i, i + smaLength);
+			sma[i] = array.reduce((a, b) => a + b) / array.length;
 		}
-		sma[smaLength - 1] = array.slice(0, smaLength).reduce(function (a, b) {
-				return a + b;
-			}) / smaLength;
-		for (i = smaLength; i < array.length; i++) {
-			sma[i] = sma[i - 1] + (array[i] - array[i - smaLength]) / smaLength;
-		}
-		sma.reverse(); // reverse back for main consumption
 		return sma;
 	}
 

@@ -1,6 +1,6 @@
 var config = {   fetchupdatesfrommarkets: true,
             adminemail: 'christopher@supnig.com',
-            db: 'mongodb://localhost/cointelligence',
+            db: 'mongodb://localhost/cointelligence2',
             facebook: {
                 clientID: "277291162395670",
                 clientSecret: "f42eb8c82b962f02d3b67ea0e5e09200",

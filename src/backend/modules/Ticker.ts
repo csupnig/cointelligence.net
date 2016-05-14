@@ -28,7 +28,7 @@ export class Ticker {
 
     private currentElement : Tick = new Tick();
 
-    constructor(public pair:string, private tickhandler : (tick : Tick) => void) {
+    constructor(public pair:string, private tickhandler : (tick : Tick) => void, private ticksavehandler : (tick:Tick)=>void) {
 
     }
 
@@ -54,9 +54,7 @@ export class Ticker {
             if (time > (ticker.tickerLastPacket + config.tickerresolution)) {
                 //create new tick
                 if (currentElement.close) {
-                    ticker._createAndSaveTick(currentElement).catch((err)=>{
-                        console.error('Could not save tick ' + ticker.pair, err);
-                    });
+                    this.ticksavehandler(currentElement);
                     currentElement = ticker.currentElement = new Tick();
                 }
                 currentElement.vol = tick.vol;
@@ -127,19 +125,5 @@ export class Ticker {
         return this.currentRequest;
     }
 
-    private _createAndSaveTick(tick : Tick) : Q.Promise<SaveableTick> {
-        var saveable : SaveableTick = <SaveableTick> tick,
-            deferred = Q.defer<SaveableTick>();
-        saveable.tickerid = this.pair;
-        var t = new tickmodel.TickModel(saveable);
-        t.save(function(err){
-            if (err) {
-                deferred.reject(err);
-            } else {
-                console.log('tick saved');
-                deferred.resolve(saveable);
-            }
-        });
-        return deferred.promise;
-    }
+
 }

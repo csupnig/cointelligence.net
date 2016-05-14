@@ -375,7 +375,7 @@ import constants = require('constants');
                 'content-length': contentstr.length,
             };
 
-
+            console.log('PRIVATE HEADERS', options.headers);
             var req = https.request(options, function (res) {
                 var data = '';
                 //res.setEncoding('utf8')
@@ -399,6 +399,7 @@ import constants = require('constants');
             req.on('error', function (err) {
                 deferred.reject(err);
             });
+            console.log('CONTENT', contentstr);
             req.write(contentstr);
             req.end();
 

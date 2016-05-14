@@ -14,20 +14,37 @@ import swig = require("swig");
 import expressCompression = require('compression');
 import cons = require('consolidate');
 import tickerRunner = require('./modules/TickerRunner');
+import ticker = require('./modules/Ticker');
 import config = require('./config/config');
-
+import exec = require('./modules/StrategyExecutor');
 
 import logginStrat = require('./strategies/LogginStrategy');
 import customStrat = require('./strategies/CustomBuyLowSellHigh');
-import portfolio = require('./modules/SimplePortfolio');
+import simpleportfolio = require('./modules/SimplePortfolio');
+import btceportfolio = require('./modules/BTCEPortfolio');
 
 
 var env     = process.env.NODE_ENV || 'development';
-var port    = process.env.PORT || 8081;
+var port    = process.env.PORT || 8089;
 mongoose.connect(config.db);
 var app = express();
 
-var runner = new tickerRunner.TickerRunner('ltc_usd', 60, new portfolio.SimplePortfolio('ltc_usd', 1000, 0, 0.002), new customStrat.CustomBuyLowSellHigh());
+//var portfolio = new btceportfolio.BTCEPortfolio('ltc_usd','ZNZXDFMA-RAR0GVMN-AKCGHMOY-24IYSSIL-O1O7S613','471c44dff8206b8d35e172977ff958ee9af1b77e22c5a6c792dcfd376cba8cd6');
+var portfolio = new simpleportfolio.SimplePortfolio('ltc_usd',1000,0,0.002);
+
+var runner = new tickerRunner.TickerRunner('ltc_usd', 60,false);
+var executor = new exec.StrategyExecutor('ltc_usd', 60,
+    //new customStrat.CustomBuyLowSellHigh(),
+    new logginStrat.LogginStrategy(),
+    portfolio
+    );
+
+
+portfolio.init().then(()=>{
+    runner.registerHandler((t : ticker.Tick)=>{
+        executor.handleTick(t);
+    });
+});
 
 var server = http.createServer(app);
 

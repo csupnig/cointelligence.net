@@ -24,7 +24,8 @@
     "body-parser": "*",
     "compression": "*",
     "swig": "*",
-    "consolidate": "*"
+    "consolidate": "*",
+    "ta-lib":"*"
   },
   "devDependencies": {
     "gulp": "~3.6.1",

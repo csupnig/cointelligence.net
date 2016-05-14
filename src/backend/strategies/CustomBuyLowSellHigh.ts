@@ -9,9 +9,9 @@ var MathUtil = math.MathUtil;
 export class CustomBuyLowSellHigh implements istrategy.IStrategy {
 
     private mintrade = 0.2;//10;
-    private minpriceincrease = 1.05;
+    private minpriceincrease = 0.6;//in %
     private keepfiat = 33;
-    private minactiondistance = 0.025;
+    private minactiondistance = 0.015;
     private buys = [];
     private lastaction = 0;
     private stoploss = 3; // in percent
@@ -34,7 +34,7 @@ export class CustomBuyLowSellHigh implements istrategy.IStrategy {
         var EMA21 = MathUtil.EMA(instruments, 21);
         var EMA10 = MathUtil.EMA(instruments, 10);
         var RSI = MathUtil.RSI(instruments, 14);
-        var STOCHRSI = MathUtil.STOCHRSI(RSI,14);
+        var STOCHRSI = MathUtil.STOCHRSI(instruments,14)[0];
 
         var minactiondist = this.minactiondistance;
         if (EMA21[0] > EMA10[0]) {
@@ -55,14 +55,14 @@ export class CustomBuyLowSellHigh implements istrategy.IStrategy {
         //    console.log("missing buy " + portfolio.asset + " > " + that.buys.length, that.buys);
         //}
 
-        console.log(new Date(), 'price', curPrice,'EMA21', EMA21[0],'STOCHRSI',STOCHRSI, 'RSI', RSI[0], 'FIAT', portfolio.fiat, 'ASSET', portfolio.asset,'TOTAL', portfolio.fiat + (portfolio.asset *(1 - fee) * curPrice), "buys", that.buys.length);
+        console.log(new Date().getTime(),'buy', buy, tospend > (this.mintrade * curPrice) && Math.abs(that.lastaction - curPrice) > minactiondist, 'price', curPrice.toFixed(2),'EMA21', EMA21[0].toFixed(2),'STOCHRSI',STOCHRSI.toFixed(2), 'FIAT', portfolio.fiat.toFixed(2), 'ASSET', portfolio.asset.toFixed(2),'TOTAL', (portfolio.fiat + (portfolio.asset *(1 - fee) * curPrice)).toFixed(2), portfolio.initial.toFixed(2), "buys", that.buys.length);
 
         //check if current price is higher than one of the bought items
         for (var i = 0; i < that.buys.length; i++) {
             var item = that.buys[i];
             var amount = item.amount * (1 - fee);
             if ((item.rate * (1 - (that.stoploss / 100))) > curPrice && !item.busy && !item.deleted) {
-                that.buys[i].busy = true;
+                item.busy = true;
                 console.log('stoplossing', item.rate, item.amount, curPrice);
                 portfolio.getPossiblePrice(amount, iportfolio.METHOD.SELL).then((price:number)=> {
                     portfolio.sell(amount, price).then(()=>{
@@ -82,11 +82,14 @@ export class CustomBuyLowSellHigh implements istrategy.IStrategy {
                     if (actualPrice < EMA21[0] && tospend > (actualPrice * a) && Math.abs(that.lastaction - actualPrice) > minactiondist) {
                         var opts = {amount:a, rate:actualPrice};
                         console.log('buying @ ' + actualPrice + ", lastaction = " + that.lastaction + ", minsellprice = " + (actualPrice * percincrease), opts);
-                        that.lastaction = actualPrice;
-                        portfolio.buy(a, actualPrice).then(() => {
-                            console.log('bought', opts);
-                            console.log("Will sell this portion @ price > " + (actualPrice * percincrease),"info");
-                            that.buys.push(opts);
+                        portfolio.buy(a, actualPrice).then((actAmount : number) => {
+                            if (actAmount > 0) {
+                                that.lastaction = actualPrice;
+                                opts.amount = actAmount;
+                                console.log('bought', opts);
+                                console.log("Will sell this portion @ price > " + (actualPrice * percincrease), "info");
+                                that.buys.push(opts);
+                            }
                         }).catch((err) => {
                             console.error("Buy not possible", err);
                         });
@@ -109,29 +112,34 @@ export class CustomBuyLowSellHigh implements istrategy.IStrategy {
                 var item = that.buys[i];
                 var perc = curPrice / item.rate;
                 var amount = item.amount * (1 - fee);
-                if (perc > percincrease && !that.buys[i].busy && !that.buys[i].deleted) {
-                    that.buys[i].busy = true;
+                if (perc > percincrease && !item.busy && !item.deleted) {
+                    item.busy = true;
                     portfolio.getPossiblePrice(amount, iportfolio.METHOD.SELL).then((price:number)=>{
                         var actualPrice = price;
                         var actualPercInc = actualPrice / item.rate;
                         if (actualPercInc > percincrease) {
                             console.log('selling ' +item.rate + " -> " + actualPrice + ". inc: " + actualPercInc, actualPrice);
-                            portfolio.sell(amount, actualPrice).then(()=>{
+                            portfolio.sell(amount, actualPrice).then((actAmount : number)=>{
                                 console.log('sold', actualPrice, that.buys);
                                 //that.buys.push(opts);
                                 //that.buys.splice(i, 1);
-                                that.buys[i].deleted = true;
+                                item.amount -= actAmount;
+                                if (item.amount <= 0) {
+                                    item.deleted = true;
+                                } else {
+                                    item.busy = false;
+                                }
                                 that.lastaction = actualPrice;
-                                console.log('removed', actualPrice, that.buys, i);
                             }).catch(()=>{
                                 console.log('error while trying to sell');
-                                that.buys[i].busy = false;
+                                item.busy = false;
                             });
                         } else {
-                            that.buys[i].busy = false;
+                            item.busy = false;
                         }
+                    }).catch(()=>{
+                        item.busy = false;
                     });
-                    break;
                 }
             }
         }

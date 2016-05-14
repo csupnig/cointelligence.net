@@ -3,6 +3,13 @@ var assert = require('assert');
 var MathUtil = math.MathUtil;
 
 describe('MathUtil', function(){
+    describe('average',function(){
+       it('should yield expected results', function(){
+           var instruments = [1, 2, 3, 4, 5, 6, 7, 8, 9, 25];
+           var avg = MathUtil.average(instruments);
+           assert.equal(6.48074069840786, avg.deviation);
+       })
+    });
     describe('RSI', function(){
        it('should youeld expected results', function(){
           var instruments = [44.34,
@@ -39,11 +46,59 @@ describe('MathUtil', function(){
                   42.66,
                   43.13].reverse(),
               rsi = MathUtil.RSI(instruments, 14);
-            console.log(rsi);
-           assert.equal(37.77, rsi[0]);
-           assert.equal(33.08, rsi[1]);
-           assert.equal(37.30, rsi[2]);
-           assert.equal(45.46, rsi[3]);
+           assert.equal(Math.round(rsi[0]*100)/100, 37.77);
+           assert.equal(Math.round(rsi[1]*100)/100, 33.08);
+           assert.equal(Math.round(rsi[2]*100)/100, 37.30);
+       });
+    });
+
+    describe('average', function(){
+       it('should yield expected results', function(){
+           var instruments = [86.16,
+                   89.09,
+                   88.78,
+                   90.32,
+                   89.07,
+                   91.15,
+                   89.44,
+                   89.18,
+                   86.93,
+                   87.68,
+                   86.96,
+                   89.43,
+                   89.32,
+                   88.72,
+                   87.45,
+                   87.26,
+                   89.50,
+                   87.90,
+                   89.13,
+                   90.70,
+                   92.90,
+                   92.98,
+                   91.80,
+                   92.66,
+                   92.68,
+                   92.30,
+                   92.77,
+                   92.54,
+                   92.95,
+                   93.20,
+                   91.07,
+                   89.83,
+                   89.74,
+                   90.40,
+                   90.74,
+                   88.02,
+                   88.09,
+                   88.84,
+                   90.78,
+                   90.54,
+                   91.39,
+                   90.65].reverse(),
+               arr = instruments.slice(0,20),
+               avg = MathUtil.average(arr);
+           assert.equal(Math.round(avg.deviation * 100)/100, 1.55);
        });
     });
     describe('STOCHRSI', function(){
@@ -81,8 +136,109 @@ describe('MathUtil', function(){
               67.59
               ].reverse(),
               stochrsi = MathUtil.STOCHRSI(instruments,14);
-           assert.equal(85, stochrsi);
+           assert.equal(71.51115405773173, stochrsi[0]);
+           assert.equal(71.51115405773176, stochrsi[1]);
+           assert.equal(46.65265157825128, stochrsi[2]);
+       });
+    });
 
+    describe('SMA',function(){
+       it('should yield expected results', function(){
+           var instruments = [86.16,
+                   89.09,
+                   88.78,
+                   90.32,
+                   89.07,
+                   91.15,
+                   89.44,
+                   89.18,
+                   86.93,
+                   87.68,
+                   86.96,
+                   89.43,
+                   89.32,
+                   88.72,
+                   87.45,
+                   87.26,
+                   89.50,
+                   87.90,
+                   89.13,
+                   90.70,
+                   92.90,
+                   92.98,
+                   91.80,
+                   92.66,
+                   92.68,
+                   92.30,
+                   92.77,
+                   92.54,
+                   92.95,
+                   93.20,
+                   91.07,
+                   89.83,
+                   89.74,
+                   90.40,
+                   90.74,
+                   88.02,
+                   88.09,
+                   88.84,
+                   90.78,
+                   90.54,
+                   91.39,
+                   90.65].reverse(),
+               sma = MathUtil.SMA(instruments,20);
+           assert.equal(Math.round(sma[0] * 100) / 100,91.05);
+       });
+    });
+    
+    describe('BBANDS', function(){
+       it('should yield expected results', function(){
+          var instruments = [86.16,
+              89.09,
+              88.78,
+              90.32,
+              89.07,
+              91.15,
+              89.44,
+              89.18,
+              86.93,
+              87.68,
+              86.96,
+              89.43,
+              89.32,
+              88.72,
+              87.45,
+              87.26,
+              89.50,
+              87.90,
+              89.13,
+              90.70,
+              92.90,
+              92.98,
+              91.80,
+              92.66,
+              92.68,
+              92.30,
+              92.77,
+              92.54,
+              92.95,
+              93.20,
+              91.07,
+              89.83,
+              89.74,
+              90.40,
+              90.74,
+              88.02,
+              88.09,
+              88.84,
+              90.78,
+              90.54,
+              91.39,
+              90.65].reverse(),
+              bbands = MathUtil.BBANDS(instruments,20);
+           assert.equal(Math.round(bbands.middleband[0] * 100) / 100, 91.05);
+           assert.equal(Math.round(bbands.lowband[0] * 100) / 100, 87.95);
+           assert.equal(Math.round(bbands.highband[0] * 100) / 100,94.15);
        });
     });
 });

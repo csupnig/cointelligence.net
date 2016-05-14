@@ -1,6 +1,7 @@
 import mongoose = require('mongoose');
 import Q = require('q');
 import config = require('../config/config');
+import ticker = require('../modules/Ticker');
 
 // Document schema for ticker
 var TickSchema = new mongoose.Schema({
@@ -25,14 +26,15 @@ export interface ITick extends mongoose.Document {
 }
 
 export interface ITickModel extends mongoose.Model<ITick> {
-    findByTickerid(tickerid : string, resolution : number);
+    findByTickerid(tickerid : string, resolution : number) : Q.Promise<Array<ITick>>;
+    saveAndCreate(tick : ticker.Tick, pair : string) : Q.Promise<ticker.SaveableTick>;
 }
 
 
 TickSchema.static('findByTickerid', (tickerid : string, resolution : number) : Q.Promise<Array<ITick>> => {
         var deferred = Q.defer<Array<ITick>>();
-        if (resolution > (60 * 1000)) {
-            var now = new Date().getTime();
+        if (resolution > (60)) {
+            var now = new Date().getTime() / 1000;
             var since = now - (config.tickerdatabuffer * resolution);
             TickModel.find({"tickerid":tickerid}).where('date').gt(since).sort('+date').exec((err,ticks) => {
                 if (err) {
@@ -52,5 +54,21 @@ TickSchema.static('findByTickerid', (tickerid : string, resolution : number) : Q
         }
         return deferred.promise;
 });
+
+TickSchema.static('saveAndCreate', (tick : ticker.Tick, pair : string) : Q.Promise<ticker.SaveableTick> => {
+        var saveable : ticker.SaveableTick = <ticker.SaveableTick> tick,
+            deferred = Q.defer<ticker.SaveableTick>();
+        saveable.tickerid = pair;
+        var t = new TickModel(saveable);
+        t.save(function(err){
+            if (err) {
+                deferred.reject(err);
+            } else {
+                console.log('tick saved');
+                deferred.resolve(saveable);
+            }
+        });
+        return deferred.promise;
+    });
 
 export var TickModel = <ITickModel>mongoose.model('tickers', TickSchema);

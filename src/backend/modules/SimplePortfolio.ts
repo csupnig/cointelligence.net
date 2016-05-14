@@ -5,6 +5,7 @@ import btce = require('../APIs/Btce');
 export class SimplePortfolio implements iportfolio.IPortfolio {
 
     private api = new btce.BTCEPublic();
+    public initial : number = 0;
 
     constructor(public pair : string, public fiat : number, public asset : number, public fee : number){
 
@@ -12,25 +13,26 @@ export class SimplePortfolio implements iportfolio.IPortfolio {
 
     init() : Q.Promise<boolean> {
         var deferred = Q.defer<boolean>();
+        this.initial = this.fiat;
         deferred.resolve(true);
         return deferred.promise;
     }
 
-    buy(amount : number, price : number) : Q.Promise<boolean> {
-        var deferred = Q.defer<boolean>();
+    buy(amount : number, price : number) : Q.Promise<number> {
+        var deferred = Q.defer<number>();
         console.log('portfolio', this, this.fiat, amount, price);
         if ( (this.fiat - amount * price) >= 0) {
             this.asset += (amount - amount * this.fee);
             this.fiat -= amount * price;
-            deferred.resolve(true);
+            deferred.resolve(amount);
         } else {
-            deferred.reject(false);
+            deferred.reject(0);
         }
 
         return deferred.promise;
     }
-    sell(amount : number, price : number) : Q.Promise<boolean> {
-        var deferred = Q.defer<boolean>();
+    sell(amount : number, price : number) : Q.Promise<number> {
+        var deferred = Q.defer<number>();
         console.log('portfolio', this, this.fiat, amount, price);
         if (amount > this.asset) {
             amount = this.asset;
@@ -38,9 +40,9 @@ export class SimplePortfolio implements iportfolio.IPortfolio {
         if ( (this.asset - amount) >= 0) {
             this.asset -= amount;
             this.fiat += (amount - amount * this.fee) * price;
-            deferred.resolve(true);
+            deferred.resolve(amount);
         } else {
-            deferred.reject(false);
+            deferred.reject(0);
         }
         return deferred.promise;
     }
